@@ -6,6 +6,7 @@ use App\Models\AppUser;
 use App\Models\cost_categories;
 
 use App\Models\Cost;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 
@@ -106,6 +107,12 @@ class BillCostApp extends Controller
             return redirect('home')->with('error', 'Cost not found.');
         }
 
+    }
+
+    public function logout()
+    {
+        Session::flush();
+        return Redirect::to('/');
     }
 
 
