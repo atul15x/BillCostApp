@@ -47,17 +47,21 @@
 
     @foreach ($matchingDate_CostView as $data)
     <div style="border:2px solid black; margin: 1% 0;padding:5px" class="row justify-content-between align-items-center">
-        <div class="col-auto">
-            <h4 style="color: #a2a2a2">{{$data->cost_categories->categories_name}}</h4>
-            <h6 style="color: #a2a2a2">Cost: {{$data->total_cost}}</h6>
+        <div class="col-md-auto ">
+            <div class="d-flex justify-content-between align-items-center"> 
+                <h4 class="" style="color: #a2a2a2">{{$data->cost_categories->categories_name}}</h4>
+                <h6 class="" style="color: #a2a2a2">Cost: {{$data->total_cost}}</h6>
+            </div>
         </div>
-        <div class="col-auto">
-            <span style="color: #a2a2a2">{{$data->cost_expense_date}}</span>
-            <form style="display: inline-flex" action="/deleteCost{{$data->id}}" method="POST" >
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-light"><i style="color: #a2a2a2" class="bi bi-trash3"></i></button>
-            </form>
+        <div class="col-md-auto  mt-2 mt-md-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <span style="color: #a2a2a2">{{$data->cost_expense_date}}</span>
+                <form style="display: inline-flex" action="/deleteCost{{$data->id}}" method="POST" >
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-light"><i style="color: #a2a2a2" class="bi bi-trash3"></i></button>
+                </form>
+            </div>
         </div>
     </div>
     @endforeach
