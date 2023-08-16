@@ -27,3 +27,7 @@ Route::post('/addCost', [BillCostApp::class, 'addCost']);
 Route::delete('/deleteCost{id}', [BillCostApp::class, 'deleteCost']);
 
 Route::post('/logout', [BillCostApp::class, 'logout']);
+
+Route::get('/search', [BillCostApp::class, 'search'])->name('search');
+
+Route::post('/searchCost', [BillCostApp::class, 'searchCost'])->name('searchCost');

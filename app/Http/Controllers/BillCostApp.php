@@ -6,8 +6,10 @@ use App\Models\AppUser;
 use App\Models\cost_categories;
 
 use App\Models\Cost;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class BillCostApp extends Controller
@@ -113,6 +115,75 @@ class BillCostApp extends Controller
     {
         Session::flush();
         return Redirect::to('/');
+    }
+
+
+    public function search()
+    {
+        $userId = Session::get('userid');
+        $user = AppUser::find($userId);
+
+        // ShowingCategories
+        $cost_categories = cost_categories::where('user_id', '0')->orWhere('user_id', $userId)->get();
+        $cost_categories->toArray();
+
+        return view('search')->with('user', $user)
+            ->with('resultsShow', false)
+            ->with('cost_categories', $cost_categories);
+    }
+
+    public function searchCost()
+    {
+
+        $month = request('month');
+        $cate = request('cate');
+
+        $userId = Session::get('userid');
+        $user = AppUser::find($userId);
+
+        // $Costdata = Cost::find('$userId ')->get();
+
+        // Convert user input month to match database date format
+        $formattedMonth = date('Y') . '-' . $month . '-01';
+
+
+
+
+        if ($cate === 'All') {
+            // Query database to fetch data for the specified month
+            $results = DB::table('Cost')
+                ->select('*')
+                ->where('user_id', $userId)
+                ->whereRaw('MONTH(created_at) = ?', [intval($month)])
+                ->get();
+        } else {
+
+            $results = DB::table('Cost')
+                ->select('*')
+                ->where('user_id', $userId)
+                ->where('cost_categories_id', $cate)
+                ->whereRaw('MONTH(created_at) = ?', [intval($month)])
+                ->get();
+
+        }
+
+        $totalCostSum = $results->sum('total_cost');
+
+        // ShowingCategories
+        $cost_categories = cost_categories::where('user_id', '0')->orWhere('user_id', $userId)->get();
+        $cost_categories->toArray();
+
+
+        return view('search')
+            ->with('user', $user)
+            ->with('resultsShow', true)
+            ->with('cost_categories', $cost_categories)
+            ->with('results', $results)
+            ->with('totalCostSum', $totalCostSum);
+
+
+
+
     }
 
 
